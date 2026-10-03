@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JARVIS Mark LIII: features and where every file goes</title>
+<style>
+:root{--bg:#eaf3fa;--tx:#0b1b2b;--mu:#4d6b82;--cd:rgba(255,255,255,.75);--bd:rgba(0,90,140,.28);--a:#0086b8;--c:#b87800;--m:#b01ab0;--g:#00875a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#04070d;--tx:#dff6ff;--mu:#7fa8bd;--cd:rgba(12,24,38,.72);--bd:rgba(25,227,255,.22);--a:#19e3ff;--c:#ffc233;--m:#ff3df0;--g:#2dffa8}}
+:root[data-theme="dark"]{--bg:#04070d;--tx:#dff6ff;--mu:#7fa8bd;--cd:rgba(12,24,38,.72);--bd:rgba(25,227,255,.22);--a:#19e3ff;--c:#ffc233;--m:#ff3df0;--g:#2dffa8}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 "Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;overflow-x:hidden}
+code,pre,.mono{font-family:"Cascadia Mono",Consolas,"Courier New",monospace}
+#bg{position:fixed;inset:0;z-index:-1;width:100%;height:100%}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--a),var(--m),var(--c));z-index:30;box-shadow:0 0 12px var(--a)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:4px;align-items:center;padding:10px 18px;background:var(--cd);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);overflow-x:auto}
+nav b{margin-right:auto;font-family:"Bahnschrift","Segoe UI Variable Display",sans-serif;letter-spacing:.14em;color:var(--c);white-space:nowrap}
+nav a,nav button{color:var(--tx);text-decoration:none;font:inherit;font-size:14px;padding:6px 12px;border-radius:99px;border:1px solid transparent;background:none;cursor:pointer;white-space:nowrap}
+nav a:hover,nav button:hover,:focus-visible{border-color:var(--a);outline:2px solid var(--a);outline-offset:1px}
+section{max-width:1080px;margin:0 auto;padding:84px 20px 20px}
+h2{font:700 clamp(28px,5vw,44px)/1.1 "Bahnschrift","Segoe UI Variable Display",sans-serif;margin:0 0 8px}
+.sub{color:var(--mu);max-width:62ch;margin:0 0 28px}
+.hero{min-height:92vh;display:grid;place-items:center;text-align:center;padding-top:40px}
+.orb{width:min(300px,64vw);aspect-ratio:1;margin:0 auto 22px;position:relative;display:grid;place-items:center}
+.orb i{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:var(--a);border-bottom-color:var(--m);animation:sp 7s linear infinite;box-shadow:0 0 24px color-mix(in srgb,var(--a) 45%,transparent)}
+.orb i:nth-child(2){inset:12%;border-top-color:var(--c);border-bottom-color:var(--g);animation-duration:5s;animation-direction:reverse}
+.orb i:nth-child(3){inset:25%;border-top-color:var(--m);border-bottom-color:var(--a);animation-duration:3.2s}
+.orb em{width:34%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff,var(--c) 40%,transparent 72%);animation:pu 2.4s ease-in-out infinite;filter:blur(1px)}
+@keyframes sp{to{transform:rotate(360deg)}}@keyframes pu{50%{transform:scale(1.35);opacity:.8}}
+h1{font:800 clamp(44px,11vw,108px)/.95 "Bahnschrift","Segoe UI Variable Display",sans-serif;margin:0;letter-spacing:.04em;background:linear-gradient(100deg,var(--a),var(--m) 55%,var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+#ty{min-height:1.6em;margin:14px 0 26px;font-size:clamp(16px,2.6vw,22px);color:var(--mu)}#ty:after{content:"▌";color:var(--a);animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}
+.stats{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}.stats div{padding:12px 22px;border:1px solid var(--bd);border-radius:14px;background:var(--cd)}.stats strong{display:block;font-size:30px;color:var(--a)}.stats span{font-size:13px;color:var(--mu)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tabs button,.cp{font:inherit;font-size:14px;color:var(--tx);background:var(--cd);border:1px solid var(--bd);border-radius:99px;padding:7px 16px;cursor:pointer;transition:.2s}
+.tabs button.on,.tabs button:hover{background:var(--a);color:#04121a;border-color:var(--a);box-shadow:0 0 16px color-mix(in srgb,var(--a) 55%,transparent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{--x:50%;--y:50%;position:relative;padding:20px;border-radius:18px;border:1px solid var(--bd);background:radial-gradient(240px circle at var(--x) var(--y),color-mix(in srgb,var(--a) 22%,transparent),transparent 70%),var(--cd);backdrop-filter:blur(8px);animation:pop .5s both;transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-5px) rotate(-.4deg);border-color:var(--a)}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.97)}}
+.ic{font-size:30px;filter:drop-shadow(0 0 10px var(--a))}.card h3{margin:8px 0 6px;font-size:18px}.card p{margin:0 0 10px;color:var(--mu);font-size:14.5px}
+.say{display:inline-block;font-size:13px;padding:4px 10px;border-radius:8px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c);border:1px dashed var(--c);cursor:pointer}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:s}
+.st{padding:16px;border-radius:16px;border:1px solid var(--bd);background:var(--cd);position:relative;counter-increment:s}
+.st:before{content:counter(s);position:absolute;top:-12px;left:14px;width:26px;height:26px;border-radius:50%;background:var(--m);color:#fff;font-weight:700;display:grid;place-items:center;box-shadow:0 0 14px var(--m)}
+.st.hl{animation:gl 1.6s ease-in-out infinite}@keyframes gl{50%{box-shadow:0 0 22px var(--a);border-color:var(--a)}}
+.safe{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:18px}.safe div{padding:12px 14px;border-left:3px solid var(--g);background:var(--cd);border-radius:0 12px 12px 0;font-size:14.5px}
+.cm{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.cm>div{padding:18px;border-radius:16px;border:1px solid var(--bd);background:var(--cd)}.cm h3{margin:0 0 10px;color:var(--a)}
+.cm .say{margin:0 6px 8px 0}
+.files{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px}@media(max-width:820px){.files{grid-template-columns:1fr}}
+#tree{padding:16px;border-radius:16px;border:1px solid var(--bd);background:var(--cd);font-size:14px;overflow-x:auto}
+.n{display:block;width:100%;text-align:left;background:none;border:0;color:var(--tx);font:inherit;padding:3px 8px;border-radius:8px;cursor:pointer;white-space:nowrap}.n:hover,.n.on{background:color-mix(in srgb,var(--a) 20%,transparent)}
+.tag{font-size:11px;padding:1px 8px;border-radius:99px;margin-left:8px;border:1px solid}.new{color:var(--g)}.rep{color:var(--c)}.aut{color:var(--a)}.old{color:var(--mu)}
+#det{padding:20px;border-radius:16px;border:1px solid var(--a);background:var(--cd);position:sticky;top:80px;align-self:start;min-height:180px;box-shadow:0 0 28px color-mix(in srgb,var(--a) 25%,transparent)}
+#det .mono{word-break:break-all;color:var(--c);font-size:13px}
+pre{margin:0;padding:16px;border-radius:14px;background:#050b12;color:#bff0ff;border:1px solid var(--bd);overflow-x:auto;font-size:13px;line-height:1.7}
+.box{position:relative;margin:14px 0}.box .cp{position:absolute;top:8px;right:8px;padding:4px 12px}
+.note{padding:14px 18px;border-radius:14px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 10%,transparent);margin:16px 0}
+.rv{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+footer{text-align:center;color:var(--mu);padding:60px 20px 40px;font-size:14px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style></head><body>
+<canvas id="bg"></canvas><div id="bar"></div>
+<nav><b>JARVIS</b><a href="#features">Features</a><a href="#autopilot">Autopilot</a><a href="#say">Commands</a><a href="#files">Where files go</a><a href="#setup">Setup</a><button id="th" aria-label="Switch theme">◐ Theme</button></nav>
+
+<section class="hero"><div>
+<div class="orb"><i></i><i></i><i></i><em></em></div>
+<h1>JARVIS</h1><div id="ty" aria-live="polite"></div>
+<div class="stats"><div><strong data-n="20">0</strong><span>features</span></div><div><strong data-n="3">0</strong><span>apps in one hub</span></div><div><strong data-n="2">0</strong><span>plugins added</span></div><div><strong data-n="0">0</strong><span>windows to open</span></div></div>
+</div></section>
+
+<section id="features"><h2 class="rv">Everything Jarvis can do</h2><p class="sub rv">Pick a group. Click any green phrase to copy it, then say or type it to Jarvis.</p>
+<div class="tabs" id="tabs"></div><div class="grid" id="fg"></div></section>
+
+<section id="autopilot"><h2 class="rv">Chat Autopilot: Jarvis answers while you work</h2><p class="sub rv">It runs in the background through the Message Hub. No screen, no open app, no active window. Jarvis only has to be running.</p>
+<div class="flow rv" id="flow"></div><div class="safe rv" id="safe"></div></section>
+
+<section id="say"><h2 class="rv">How to talk to it</h2><p class="sub rv">Speak or type. English, Hindi and Hinglish all work, and exact wording doesn't matter.</p><div class="cm rv" id="cm"></div></section>
+
+<section id="files"><h2 class="rv">Where every file goes</h2><p class="sub rv">Your project root is <code>C:\Users\jainil brahmbhatt\Videos\JaInil_Jarvis</code>. Click any file for its job and exact location.</p>
+<div class="files rv"><div id="tree"></div><div id="det"></div></div>
+<div class="note rv">Chromium for WhatsApp lives outside the project, in <code>C:\Users\jainil brahmbhatt\.cache\puppeteer</code>. Don't move it.</div></section>
+
+<section id="setup"><h2 class="rv">Setup in four steps</h2><p class="sub rv">Close Jarvis first, copy the files above, then run this in PowerShell.</p>
+<div class="box rv"><button class="cp">Copy</button><pre>cd "C:\Users\jainil brahmbhatt\Videos\JaInil_Jarvis"
+.\.venv\Scripts\python.exe -m pip install -U instagrapi "qrcode[pil]" keyring
+cd whatsapp_bridge
+npm install
+cd ..
+.\.venv\Scripts\python.exe main.py</pre></div>
+<div class="grid rv" id="steps"></div></section>
+<footer>Jarvis Mark LIII · Message Hub edition · everything above runs on your own PC</footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const F=[
+["voice","🎙️","Voice and wake word","Live conversation. Say Hey Jarvis to wake it; it sleeps after 2 minutes. F4 mutes the mic, and it reconnects on its own without losing the chat.","Hey Jarvis"],
+["voice","🧠","Memory","Saves facts you tell it and recalls them later. Session summaries feed the morning brief.","Remember that I like my coffee black"],
+["msg","💬","Message hub","Gmail, Instagram and WhatsApp in one feed, every message labelled by app and sender. Pop-up toast, spoken alert and a red MS button for unread.","Any new messages?"],
+["msg","⚡","Send instantly","Say who and what and it sends right away. Turn on Ask me before sending in the hub if you want a safety net.","Reply to Rahul on WhatsApp: on my way"],
+["msg","👤","WhatsApp personal only","Groups, channels and statuses are ignored by default. One switch in the hub changes it.","Check my WhatsApp"],
+["msg","✦","Smart replies","Explains what the sender wants and suggests the best reply in their language and tone, with a SEND button under the message.","Haan, bhej do"],
+["msg","🔗","Links that stay","Gmail, Instagram and WhatsApp reconnect after a restart. The WhatsApp bridge restarts itself, and Instagram uses your browser Session ID.",""],
+["auto","🤖","Chat Autopilot","Answers one-to-one WhatsApp and Instagram chats for you in the background, in your texting style, using your saved facts and web look-ups.","Take over my chat with Rahul"],
+["auto","🛡️","Autopilot safety","One-to-one only, time-limited, rate-limited. It holds money, OTP and serious moments for you, steps back when you type, and logs every reply.","What did you tell Rahul?"],
+["auto","📝","Chat facts","Tell Jarvis things it should use when replying, like your free time or preferences.","Note that I'm free on Friday evening"],
+["prod","✅","Tasks and notes","Voice to-do list and quick notes that are saved between runs.","Add a task: submit the report by 6 pm"],
+["prod","⏱️","Focus timer","Pomodoro rounds. Message announcements go quiet while you focus, and at each break Jarvis tells you what you missed.","Start focus for 25 minutes"],
+["prod","📬","Catch me up and my day","One summary of unread messages, most urgent first, with suggested replies, plus your day at a glance.","Catch me up"],
+["prod","⏰","Alarms and LockTab","Alarms ring by voice. LockTab keeps you on your Chrome tab and sounds a siren if you leave.","Set an alarm for 6:45 am"],
+["ui","🕒","Holo clock","Animated top-bar clock: rolling digits, pulsing colons, a 60-second neon line and a sweep each minute. Click it for 12h or 24h.",""],
+["ui","🧩","Quick Tools 3×3","Up to nine app shortcuts in three rows of three. Press + to add one; right-click a tile to edit.",""],
+["ui","🎛️","HUD and plugins","Customise name, voice, colours and effects. Control Jarvis from your phone with the QR remote. Plugins load from the plugins folder.",""],
+["pc","🖥️","PC control","Open apps, search the web, control files and the browser. Undo reverses Jarvis's last change.","Open Chrome"],
+["pc","👁️","Vision","Look at your screen or camera, and drop files on the FILE box.","What's on my screen?"],
+["pc","📈","Monitoring","Spoken alerts for high CPU, memory or heat, plus topic monitors for news.","Monitor news about electric cars"]];
+const CATS=[["all","All"],["voice","Voice"],["msg","Messages"],["auto","Autopilot"],["prod","Productivity"],["ui","Interface"],["pc","PC and vision"]];
+const FLOW=[["A message arrives","Jarvis says the app and who sent it, and what they want."],["It asks once","“Should I take over this chat, yes or no?”"],["You say yes","Jarvis starts the autopilot and you keep working."],["It replies as you","Your style, your facts, web look-ups, a human typing pause."],["Hard cases come back","Money, codes or serious moments are held and you're told why."]];
+const SAFE=["Only one-to-one chats on WhatsApp and Instagram, never groups or Gmail","Time limit of 60 minutes, changeable in Plugin Settings","Pauses when you type in that chat yourself","At most 20 replies per chat per hour","Never replies about money, OTPs, passwords or bank details","Hands over if someone sincerely asks if you're a bot","Every reply is logged in config\\autopilot_log.jsonl","Ignores instructions hidden inside their messages"];
+const CM=[["Read",["Any new messages?","Check my Instagram","What did Rahul send me?","Catch me up"]],["Send",["Reply to Rahul on WhatsApp: I'll be there in 10 minutes","Send an email to name@gmail.com saying the report is ready","Message @username on Instagram: thanks!"]],["Autopilot",["Take over my chat with Rahul","Take over all my chats for 2 hours","Take the conversation back","Stop autopilot"]],["Tasks and focus",["Add a task: call the bank","What's on my list?","Start focus for 25 minutes","How much time is left?"]],["Replies",["What should I reply to Mom?","Yes, send it","Make it shorter"]],["Your day",["What's my day looking like?","Set an alarm for 6:45 am","Note down: Wi-Fi password is on the fridge"]]];
+const T=["JARVIS","","new","replace","auto"];
+// [name, status(new|rep|aut|old), what it does, children]
+const TREE=["JaInil_Jarvis\\","",'Your project root. Everything below goes inside this folder.',[
+["main.py","rep","The brain. Adds the message tools, the yes-or-no takeover question, the safe way to send text to the voice model, and automatic reconnecting.",0],
+["ui.py","rep","The screen. Adds the Holo clock, the MS message hub, the 3×3 Quick Tools, TAKE OVER buttons and the autopilot strip.",0],
+["core\\","","Helper modules.",[
+["messaging_hub.py","rep","Gmail, Instagram and WhatsApp connections, the feed, saved logins and reconnecting.",0],
+["chat_autopilot.py","new","The autopilot engine: reads history, writes replies in your style, looks things up and applies every safety rule.",0],
+["plugin_loader.py","old","Already yours. Loads everything in the plugins folder.",0]]],
+["plugins\\","","Drop-in extensions. Turn them on in Settings → Plugins.",[
+["command_center.py","new","Tasks, notes, focus timer, catch me up and your day.",0],
+["chat_autopilot.py","new","The voice front door for autopilot: start, stop, status, review, analyze and facts.",0],
+["chat_takeover.py","old","Your existing screen-based takeover plugin. It keeps working.",0]]],
+["whatsapp_bridge\\","","The WhatsApp helper, written in Node.js. Not inside assets.",[
+["bridge.js","rep","Talks to WhatsApp. Now survives crashes, saves your login and reads chat history.",0],
+["package.json","rep","Lists what npm installs, including the QR image maker.",0],
+["node_modules\\","aut","Created by npm install.",0],
+[".wwebjs_auth\\","aut","Your WhatsApp login after the first QR scan. Keep it private.",0],
+["bridge.log","aut","Bridge errors, useful when something fails.",0]]],
+["config\\","","Settings and saved data.",[
+["api_keys.json","old","Already yours. Holds your Gemini key.",0],
+["messaging.json","aut","Saved message-app logins and switches.",0],
+["ig_session.json","aut","Your saved Instagram session.",0],
+["command_center.json","aut","Your tasks and notes.",0],
+["chat_takeover_facts.json","aut","Facts Jarvis uses when replying for you.",0],
+["autopilot_log.jsonl","aut","Every reply autopilot sent.",0]]]]];
+const LB={new:"new file",rep:"replace",aut:"auto-created",old:"already yours"};
+const STEPS=[["Copy the files","Put each file in the folder shown in the tree. Replace the ones marked replace."],["Run the commands","Install instagrapi and QR support, then npm install in whatsapp_bridge."],["Instagram","In Chrome open instagram.com, press F12 → Application → Cookies, copy sessionid. Paste it in MS → Instagram → Session ID."],["WhatsApp","MS → WhatsApp → LINK. Scan the QR in WhatsApp → Linked devices. Then turn on Chat Autopilot in Settings → Plugins."]];
+const cp=t=>{try{navigator.clipboard.writeText(t)}catch(e){}};
+// features
+$("#tabs").innerHTML=CATS.map(c=>`<button data-c="${c[0]}" class="${c[0]=="all"?"on":""}">${c[1]}</button>`).join("");
+function rf(c){$("#fg").innerHTML=F.filter(f=>c=="all"||f[0]==c).map((f,i)=>`<div class="card" style="animation-delay:${i*45}ms"><div class="ic">${f[1]}</div><h3>${f[2]}</h3><p>${f[3]}</p>${f[4]?`<span class="say" tabindex="0" data-t="${f[4]}">“${f[4]}”</span>`:""}</div>`).join("")}
+rf("all");$("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;$$("#tabs button").forEach(x=>x.classList.toggle("on",x==b));rf(b.dataset.c)};
+$("#flow").innerHTML=FLOW.map(f=>`<div class="st"><b>${f[0]}</b><br><span style="color:var(--mu);font-size:14px">${f[1]}</span></div>`).join("");
+let fi=0;setInterval(()=>{$$(".st").forEach((s,i)=>s.classList.toggle("hl",i==fi));fi=(fi+1)%5},1500);
+$("#safe").innerHTML=SAFE.map(s=>`<div>${s}</div>`).join("");
+$("#cm").innerHTML=CM.map(g=>`<div><h3>${g[0]}</h3>${g[1].map(c=>`<span class="say" tabindex="0" data-t="${c}">${c}</span>`).join("")}</div>`).join("");
+$("#steps").innerHTML=STEPS.map((s,i)=>`<div class="card"><div class="ic">${["📂","⌨️","📸","📱"][i]}</div><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join("");
+document.addEventListener("click",e=>{const s=e.target.closest(".say");if(s){cp(s.dataset.t);const o=s.textContent;s.textContent="copied ✓";setTimeout(()=>s.textContent=o,900)}const b=e.target.closest(".cp");if(b){cp(b.nextElementSibling.textContent);b.textContent="Copied ✓";setTimeout(()=>b.textContent="Copy",1200)}});
+// file tree
+function nd(n,path,d){const full=path+n[0];let h=`<button class="n" style="padding-left:${8+d*18}px" data-p="${full}" data-s="${n[1]}" data-d="${n[2].replace(/"/g,"&quot;")}">${n[0].endsWith("\\")?"📁":"📄"} <span class="mono">${n[0]}</span>${n[1]?`<span class="tag ${n[1]}">${LB[n[1]]}</span>`:""}</button>`;
+if(n[3])h+=n[3].map(c=>nd(c,full.replace(/\\$/,"")+"\\",d+1)).join("");return h}
+$("#tree").innerHTML=nd(TREE,"C:\\Users\\jainil brahmbhatt\\Videos\\",0);
+function sd(b){$$(".n").forEach(x=>x.classList.toggle("on",x==b));$("#det").innerHTML=`<h3 style="margin:0 0 8px">${b.querySelector(".mono").textContent}${b.dataset.s?`<span class="tag ${b.dataset.s}">${LB[b.dataset.s]}</span>`:""}</h3><p>${b.dataset.d}</p><div class="mono">${b.dataset.p}</div>`}
+$("#tree").onclick=e=>{const b=e.target.closest(".n");if(b)sd(b)};sd($$(".n")[1]);
+// theme + misc
+$("#th").onclick=()=>{const r=document.documentElement,d=getComputedStyle(r).getPropertyValue("--bg").trim()=="#04070d";r.dataset.theme=d?"light":"dark";col()};
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});$$(".rv").forEach(x=>io.observe(x));
+$$("[data-n]").forEach(el=>{const n=+el.dataset.n;let v=0;const t=setInterval(()=>{v+=Math.max(1,n/30);if(v>=n){v=n;clearInterval(t)}el.textContent=Math.round(v)},40)});
+const P=["Say “Hey Jarvis” and just talk.","Reads your WhatsApp, Instagram and Gmail.","Takes over chats while you work somewhere else.","Replies in your own style. Asks only yes or no."];let pi=0,ci=0,del=0;
+setInterval(()=>{const p=P[pi];if(!del){ci++;if(ci>p.length+18){del=1}}else{ci-=2;if(ci<=0){del=0;pi=(pi+1)%P.length;ci=0}}$("#ty").textContent=p.slice(0,Math.max(0,Math.min(ci,p.length)))},55);
+addEventListener("scroll",()=>{$("#bar").style.width=100*scrollY/(document.body.scrollHeight-innerHeight)+"%"},{passive:true});
+document.addEventListener("pointermove",e=>{const c=e.target.closest(".card");if(c){const r=c.getBoundingClientRect();c.style.setProperty("--x",e.clientX-r.left+"px");c.style.setProperty("--y",e.clientY-r.top+"px")}});
+// particle network
+const cv=$("#bg"),cx=cv.getContext("2d");let W,H,pts=[],mx=-9,my=-9,cl=["#19e3ff","#ff3df0"];
+function col(){const s=getComputedStyle(document.documentElement);cl=[s.getPropertyValue("--a").trim(),s.getPropertyValue("--m").trim()]}
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;pts=Array.from({length:Math.min(90,W/14|0)},()=>({x:Math.random()*W,y:Math.random()*H,vx:Math.random()-.5,vy:Math.random()-.5}))}
+addEventListener("resize",rs);addEventListener("pointermove",e=>{mx=e.clientX;my=e.clientY});rs();col();
+(function f(){cx.clearRect(0,0,W,H);pts.forEach((p,i)=>{p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;const dx=p.x-mx,dy=p.y-my;if(dx*dx+dy*dy<14000){p.x+=dx*.02;p.y+=dy*.02}
+cx.fillStyle=cl[i%2];cx.globalAlpha=.8;cx.beginPath();cx.arc(p.x,p.y,1.6,0,7);cx.fill();for(let j=i+1;j<pts.length;j++){const q=pts[j],a=p.x-q.x,b=p.y-q.y,d=a*a+b*b;if(d<13000){cx.globalAlpha=.22*(1-d/13000);cx.strokeStyle=cl[0];cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.stroke()}}});requestAnimationFrame(f)})();
+</script></body></html>
